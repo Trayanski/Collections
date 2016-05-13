@@ -1,0 +1,151 @@
+package com.company;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
+
+public class Problem1PageBean {
+    public static void main(String[] args) {
+        ArrayList<String> arrayListStr = new ArrayList<String>();
+        arrayListStr.add("FirstLine");
+        arrayListStr.add("SecondLine");
+        arrayListStr.add("ThirdLine");
+        arrayListStr.add("FourthLine");
+        arrayListStr.add("FifthLine");
+        PageBean pageBran = new PageBean(arrayListStr, 3);
+        System.out.println(pageBran.hasNext());
+        pageBran.next();
+        System.out.println(pageBran.hasPrevious());
+        pageBran.previous();
+        pageBran.firstPage();
+        pageBran.lastPage();
+        pageBran.getCurrentPageNumber();
+    }
+}
+
+class PageBean{
+    private int pageSize = 5;
+    public ArrayList<String> inputList;
+    public TreeMap<Integer, StringBuilder> pages = new TreeMap<Integer, StringBuilder>();
+    private int splitToPagesPage = 0;
+    private int currentPage = 1;
+
+    public PageBean(){
+
+    }
+
+    public PageBean(ArrayList<String> list, int pageSize){
+        this.inputList = list;
+        this.pageSize = pageSize;
+        splitToPages();
+        firstPage();
+    }
+
+    private void splitToPages(){
+        int j = -1;
+        this.inputList.add(0, "New Page: ");
+        for (int i = 0; i < this.inputList.size(); i++) {
+            if (!this.inputList.get(i).equals(null)) {
+                if (j == this.pageSize) {
+                    this.inputList.add(i, "New Page: ");
+                    j=0;
+                    continue;
+                }
+                j++;
+            }
+        }
+
+        //for (int i = 0; i < this.inputList.size(); i++) {
+        //    System.out.println(this.inputList.get(i));
+        //}
+
+        for (String str : this.inputList){
+            if (str.equals("New Page: ")){
+                this.splitToPagesPage++;
+            }else {
+                if (this.pages.get(this.splitToPagesPage) == null) {
+                    this.pages.put(this.splitToPagesPage, new StringBuilder().append(str));
+                }else{
+                    this.pages.get(this.splitToPagesPage).append(", ");
+                    this.pages.get(this.splitToPagesPage).append(str);
+                }
+            }
+        }
+    }
+
+    public int getPageSyze(){
+        return this.pageSize;
+    }
+
+    public void setPageSize(int pageSize){
+        this.pageSize = pageSize;
+    }
+
+    public boolean hasNext(){
+        if (!(this.currentPage >= this.pages.size())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void next(){
+        try {
+            if (hasNext()) {
+                this.currentPage++;
+                System.out.printf("The next page is(%d): %s\n",this.currentPage, this.pages.get(this.currentPage).toString());
+            } else {
+                throw new NoNextPageException("There isn't a next page!");
+            }
+        }catch (NoNextPageException ex){
+            ex.getMessage();
+        }
+    }
+
+    public boolean hasPrevious(){
+        if (!(this.currentPage <= 1)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void previous() {
+        try {
+            if (hasPrevious()) {
+                this.currentPage--;
+                System.out.printf("The previous page is(%d): %s\n",this.currentPage, this.pages.get(this.currentPage).toString());
+            } else {
+                throw new NoPreviousPageException("There isn't a previous page!");
+            }
+        }catch (NoPreviousPageException ex){
+            ex.getMessage();
+        }
+    }
+
+    public void firstPage(){
+        System.out.println("First page: " + this.pages.get(1).toString());
+        this.currentPage = 1;
+    }
+
+    public void lastPage(){
+        System.out.println("Last page: " + this.pages.get(this.pages.size()).toString());
+        this.currentPage = this.pages.size();
+    }
+
+    public void getCurrentPageNumber(){
+        System.out.println("The current page number is: " + this.currentPage);
+    }
+}
+
+class NoPreviousPageException extends Throwable {
+    public NoPreviousPageException(String s) {
+        super(s);
+    }
+}
+
+class NoNextPageException extends Throwable {
+    public NoNextPageException(String s) {
+        super(s);
+    }
+}
