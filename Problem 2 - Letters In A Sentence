@@ -15,8 +15,8 @@ public class Problem2LettersInASentence {
 
 class SentenceProcessor{
     private String sentence = null;
-    public TreeMap<String, Integer> words = new TreeMap<String, Integer>();
-    public TreeMap<Character, Integer> chars = new TreeMap<Character, Integer>();
+    private TreeMap<String, Integer> words = new TreeMap<String, Integer>();
+    private TreeMap<Character, Integer> chars = new TreeMap<Character, Integer>();
 
     public SentenceProcessor(){
     }
