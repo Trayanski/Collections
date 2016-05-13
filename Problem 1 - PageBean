@@ -1,7 +1,6 @@
 package com.company;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.TreeMap;
 
 public class Problem1PageBean {
@@ -12,9 +11,10 @@ public class Problem1PageBean {
         arrayListStr.add("ThirdLine");
         arrayListStr.add("FourthLine");
         arrayListStr.add("FifthLine");
-        PageBean pageBran = new PageBean(arrayListStr, 3);
+        PageBean pageBran = new PageBean(arrayListStr, 2);
         System.out.println(pageBran.hasNext());
         pageBran.next();
+        pageBran.next(); 
         System.out.println(pageBran.hasPrevious());
         pageBran.previous();
         pageBran.firstPage();
@@ -28,7 +28,7 @@ class PageBean{
     public ArrayList<String> inputList;
     public TreeMap<Integer, StringBuilder> pages = new TreeMap<Integer, StringBuilder>();
     private int splitToPagesPage = 0;
-    private int currentPage = 1;
+    private int currentPage = 0;
 
     public PageBean(){
 
@@ -38,7 +38,7 @@ class PageBean{
         this.inputList = list;
         this.pageSize = pageSize;
         splitToPages();
-        firstPage();
+        next(); //"Допълнителни условия 1", it will be better if we print the firstPage() method instead.
     }
 
     private void splitToPages(){
@@ -102,6 +102,19 @@ class PageBean{
         }
     }
 
+    public void next(String[] args){ // can be called from cmd
+        try {
+            if (hasNext()) {
+                this.currentPage++;
+                System.out.printf("The next page is(%d): %s\n",this.currentPage, this.pages.get(this.currentPage).toString());
+            } else {
+                throw new NoNextPageException("There isn't a next page!");
+            }
+        }catch (NoNextPageException ex){
+            ex.getMessage();
+        }
+    }
+
     public boolean hasPrevious(){
         if (!(this.currentPage <= 1)) {
             return true;
@@ -111,6 +124,19 @@ class PageBean{
     }
 
     public void previous() {
+        try {
+            if (hasPrevious()) {
+                this.currentPage--;
+                System.out.printf("The previous page is(%d): %s\n",this.currentPage, this.pages.get(this.currentPage).toString());
+            } else {
+                throw new NoPreviousPageException("There isn't a previous page!");
+            }
+        }catch (NoPreviousPageException ex){
+            ex.getMessage();
+        }
+    }
+
+    public void previous(String[] args) { // can be called from cmd
         try {
             if (hasPrevious()) {
                 this.currentPage--;
