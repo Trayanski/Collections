@@ -1,0 +1,77 @@
+package com.company;
+
+import java.util.*;
+
+public class Problem2LettersInASentence {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String sentence = scanner.nextLine();
+        SentenceProcessor sentenceProcessor = new SentenceProcessor(sentence);
+        sentenceProcessor.wordRepentance();
+        sentenceProcessor.setSentence(scanner.nextLine());
+        sentenceProcessor.letterRepeator();
+    }
+}
+
+class SentenceProcessor{
+    private String sentence = null;
+    public TreeMap<String, Integer> words = new TreeMap<String, Integer>();
+    public TreeMap<Character, Integer> chars = new TreeMap<Character, Integer>();
+
+    public SentenceProcessor(){
+    }
+
+    public SentenceProcessor(String sentence){
+        this.sentence = sentence;
+    }
+
+    public void wordRepentance(){
+        String[] splittedSentence = this.sentence.split(" ");
+
+        for (String word : splittedSentence){
+            if (this.words.containsKey(word)){
+                this.words.put(word, this.words.get(word) + 1);;
+            } else{
+                this.words.put(word, 1);
+            }
+        }
+
+        for(Map.Entry<String,Integer> entry : this.words.entrySet()) {
+            String key = entry.getKey();
+            Integer value = entry.getValue();
+
+            System.out.println(key + " => " + value);
+        }
+    }
+
+    public void letterRepeator(){
+        char[] sentenceOfChars = this.sentence.replaceAll("\\s","").toCharArray();
+        Character maxKey = null;
+        Integer maxValue = 0;
+
+        for (char ch : sentenceOfChars){
+            if (this.chars.containsKey(ch)){
+                this.chars.put(ch, this.chars.get(ch) + 1);;
+            } else{
+                this.chars.put(ch, 1);
+            }
+        }
+
+        for(Map.Entry<Character,Integer> entry : this.chars.entrySet()) {
+            if (Integer.parseInt(entry.getValue().toString()) > maxValue){
+                maxKey = entry.getKey();
+                maxValue = entry.getValue();
+            }
+        }
+
+        System.out.println("The maximum used letter is: " + maxKey);
+    }
+
+    public String getSentence(){
+        return this.sentence;
+    }
+
+    public void setSentence(String newSentence){
+        this.sentence = newSentence;
+    }
+}
